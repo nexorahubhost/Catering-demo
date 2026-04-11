@@ -26,80 +26,122 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero -->
     <section class="hero" id="home">
         <div class="hero-content">
             <h1>Exceptional Catering for Every Occasion</h1>
-            <p>From intimate gatherings to grand celebrations, we bring culinary excellence to your table with customizable menus and impeccable service.</p>
+            <p>From intimate gatherings to grand celebrations, we bring delicious Nigerian meals and premium service to your events.</p>
             <a href="#menu" class="cta-button">Explore Our Menu</a>
         </div>
     </section>
 
-    <!-- Menu Section -->
+    <!-- MENU -->
     <section id="menu">
         <h2 class="section-title">Our Menu</h2>
         
         <div class="menu-filters">
             <button class="filter-btn active" onclick="filterMenu('all')">All Items</button>
-            <button class="filter-btn" onclick="filterMenu('appetizer')">Appetizers</button>
-            <button class="filter-btn" onclick="filterMenu('main')">Main Courses</button>
+            <button class="filter-btn" onclick="filterMenu('appetizer')">Small Chops</button>
+            <button class="filter-btn" onclick="filterMenu('main')">Main Dishes</button>
             <button class="filter-btn" onclick="filterMenu('dessert')">Desserts</button>
-            <button class="filter-btn" onclick="filterMenu('beverage')">Beverages</button>
+            <button class="filter-btn" onclick="filterMenu('beverage')">Drinks</button>
         </div>
 
         <div class="menu-grid" id="menuGrid">
-            <!-- Menu items injected by JavaScript -->
+
+            <div class="menu-item" data-category="main">
+                <h3>Jollof Rice & Chicken</h3>
+                <p>Smoky party jollof served with grilled chicken</p>
+                <span class="price">₦3,500</span>
+            </div>
+
+            <div class="menu-item" data-category="main">
+                <h3>Fried Rice & Turkey</h3>
+                <p>Classic fried rice with seasoned turkey</p>
+                <span class="price">₦4,000</span>
+            </div>
+
+            <div class="menu-item" data-category="appetizer">
+                <h3>Small Chops Combo</h3>
+                <p>Puff puff, samosa, spring rolls & gizdodo</p>
+                <span class="price">₦2,500</span>
+            </div>
+
+            <div class="menu-item" data-category="main">
+                <h3>Pounded Yam & Egusi</h3>
+                <p>Rich egusi soup with assorted meat</p>
+                <span class="price">₦4,500</span>
+            </div>
+
+            <div class="menu-item" data-category="dessert">
+                <h3>Coconut Candy & Cake</h3>
+                <p>Sweet treats to finish your meal</p>
+                <span class="price">₦1,500</span>
+            </div>
+
+            <div class="menu-item" data-category="beverage">
+                <h3>Zobo Drink</h3>
+                <p>Freshly made zobo with natural flavors</p>
+                <span class="price">₦800</span>
+            </div>
+
+            <div class="menu-item" data-category="beverage">
+                <h3>Chapman</h3>
+                <p>Refreshing Nigerian cocktail</p>
+                <span class="price">₦1,200</span>
+            </div>
+
         </div>
     </section>
 
-    <!-- Packages Section -->
+    <!-- PACKAGES -->
     <section id="packages" class="packages">
         <h2 class="section-title">Catering Packages</h2>
         <div class="packages-grid">
+
             <div class="package-card">
-                <h3>Basic Buffet</h3>
-                <div class="package-price">$25<span>/person</span></div>
+                <h3>Owambe Starter</h3>
+                <div class="package-price">₦12,000<span>/person</span></div>
                 <ul class="package-features">
-                    <li>2 Main Courses</li>
-                    <li>1 Salad Selection</li>
-                    <li>1 Dessert Option</li>
-                    <li>Soft Beverages</li>
-                    <li>Basic Tableware</li>
+                    <li>1 Rice Dish</li>
+                    <li>Chicken or Turkey</li>
+                    <li>Small Chops</li>
+                    <li>Drinks</li>
+                    <li>Basic Setup</li>
                 </ul>
-                <button class="cta-button" onclick="selectPackage('Basic', 25)">Select Package</button>
+                <button class="cta-button" onclick="selectPackage('Owambe Starter', 12000)">Select Package</button>
             </div>
 
             <div class="package-card featured">
-                <h3>Premium Feast</h3>
-                <div class="package-price">$45<span>/person</span></div>
+                <h3>Party Standard</h3>
+                <div class="package-price">₦20,000<span>/person</span></div>
                 <ul class="package-features">
-                    <li>4 Main Courses</li>
-                    <li>3 Appetizer Options</li>
-                    <li>2 Salad Selections</li>
-                    <li>3 Dessert Options</li>
-                    <li>Open Bar Service</li>
-                    <li>Premium Tableware & Linens</li>
+                    <li>Jollof + Fried Rice</li>
+                    <li>Chicken & Beef</li>
+                    <li>Small Chops</li>
+                    <li>2 Drinks Options</li>
+                    <li>Service Staff</li>
                 </ul>
-                <button class="cta-button" onclick="selectPackage('Premium', 45)">Select Package</button>
+                <button class="cta-button" onclick="selectPackage('Party Standard', 20000)">Select Package</button>
             </div>
 
             <div class="package-card">
-                <h3>Corporate Deluxe</h3>
-                <div class="package-price">$65<span>/person</span></div>
+                <h3>Premium Owambe</h3>
+                <div class="package-price">₦35,000<span>/person</span></div>
                 <ul class="package-features">
-                    <li>Unlimited Stations</li>
-                    <li>Live Cooking Demos</li>
-                    <li>5-Star Appetizers</li>
-                    <li>Gourmet Dessert Bar</li>
-                    <li>Premium Bar & Wine</li>
-                    <li>Full Service Staff</li>
+                    <li>Multiple Dishes</li>
+                    <li>Asun, Turkey & Assorted Meat</li>
+                    <li>Full Small Chops Table</li>
+                    <li>Chapman & Cocktails</li>
+                    <li>Full Service</li>
                 </ul>
-                <button class="cta-button" onclick="selectPackage('Corporate', 65)">Select Package</button>
+                <button class="cta-button" onclick="selectPackage('Premium Owambe', 35000)">Select Package</button>
             </div>
+
         </div>
     </section>
 
-    <!-- Contact Section -->
+    <!-- CONTACT -->
     <section id="contact">
         <h2 class="section-title">Book Your Event</h2>
         <form class="contact-form" onsubmit="handleBooking(event)">
@@ -117,7 +159,7 @@
             </div>
             <div class="form-group">
                 <label>Number of Guests</label>
-                <input type="number" min="10" required placeholder="Minimum 10 guests">
+                <input type="number" min="10" required>
             </div>
             <div class="form-group">
                 <label>Event Type</label>
@@ -125,49 +167,19 @@
                     <option value="">Select Event Type</option>
                     <option>Wedding</option>
                     <option>Corporate Event</option>
-                    <option>Birthday Party</option>
-                    <option>Anniversary</option>
-                    <option>Other</option>
+                    <option>Birthday</option>
+                    <option>Owambe</option>
                 </select>
             </div>
-            <div class="form-group">
-                <label>Special Requests</label>
-                <textarea rows="4" placeholder="Dietary restrictions, theme preferences, etc."></textarea>
-            </div>
-            <button type="submit" class="submit-btn">Submit Booking Request</button>
+            <button type="submit" class="submit-btn">Submit Booking</button>
         </form>
     </section>
 
-    <!-- Footer -->
+    <!-- FOOTER -->
     <footer>
-        <p>&copy; 2026 Double Take Catering. All rights reserved.</p>
-        <p>Call us: (555) 123-4567 | Email: info@doubletakecatering.com</p>
+        <p>&copy; 2026 Double Take Catering</p>
+        <p>Call: +234 801 234 5678 | Email: info@doubletakecatering.com</p>
     </footer>
-
-    <!-- Cart Icon -->
-    <div class="cart-icon" onclick="toggleCart()">
-        🛒
-        <span class="cart-count" id="cartCount">0</span>
-    </div>
-
-    <!-- Cart Sidebar -->
-    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h3>Your Order</h3>
-            <button class="close-cart" onclick="toggleCart()">✕</button>
-        </div>
-        <div class="cart-items" id="cartItems">
-            <!-- Cart items injected here -->
-        </div>
-        <div class="cart-footer">
-            <div class="cart-total">
-                <span>Total:</span>
-                <span id="cartTotal">$0.00</span>
-            </div>
-            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
-        </div>
-    </div>
 
     <script src="script.js"></script>
 </body>
