@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Double Take Catering | Premium Event Catering</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">🍽️ Double Take Catering</a>
+            <ul class="nav-links">
+                <li><a href="#home">Home</a></li>
+                <li><a href="#menu">Menu</a></li>
+                <li><a href="#packages">Packages</a></li>
+                <li><a href="#contact">Book Now</a></li>
+            </ul>
+            <div class="mobile-menu" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Exceptional Catering for Every Occasion</h1>
+            <p>From intimate gatherings to grand celebrations, we bring culinary excellence to your table with customizable menus and impeccable service.</p>
+            <a href="#menu" class="cta-button">Explore Our Menu</a>
+        </div>
+    </section>
+
+    <!-- Menu Section -->
+    <section id="menu">
+        <h2 class="section-title">Our Menu</h2>
+        
+        <div class="menu-filters">
+            <button class="filter-btn active" onclick="filterMenu('all')">All Items</button>
+            <button class="filter-btn" onclick="filterMenu('appetizer')">Appetizers</button>
+            <button class="filter-btn" onclick="filterMenu('main')">Main Courses</button>
+            <button class="filter-btn" onclick="filterMenu('dessert')">Desserts</button>
+            <button class="filter-btn" onclick="filterMenu('beverage')">Beverages</button>
+        </div>
+
+        <div class="menu-grid" id="menuGrid">
+            <!-- Menu items injected by JavaScript -->
+        </div>
+    </section>
+
+    <!-- Packages Section -->
+    <section id="packages" class="packages">
+        <h2 class="section-title">Catering Packages</h2>
+        <div class="packages-grid">
+            <div class="package-card">
+                <h3>Basic Buffet</h3>
+                <div class="package-price">$25<span>/person</span></div>
+                <ul class="package-features">
+                    <li>2 Main Courses</li>
+                    <li>1 Salad Selection</li>
+                    <li>1 Dessert Option</li>
+                    <li>Soft Beverages</li>
+                    <li>Basic Tableware</li>
+                </ul>
+                <button class="cta-button" onclick="selectPackage('Basic', 25)">Select Package</button>
+            </div>
+
+            <div class="package-card featured">
+                <h3>Premium Feast</h3>
+                <div class="package-price">$45<span>/person</span></div>
+                <ul class="package-features">
+                    <li>4 Main Courses</li>
+                    <li>3 Appetizer Options</li>
+                    <li>2 Salad Selections</li>
+                    <li>3 Dessert Options</li>
+                    <li>Open Bar Service</li>
+                    <li>Premium Tableware & Linens</li>
+                </ul>
+                <button class="cta-button" onclick="selectPackage('Premium', 45)">Select Package</button>
+            </div>
+
+            <div class="package-card">
+                <h3>Corporate Deluxe</h3>
+                <div class="package-price">$65<span>/person</span></div>
+                <ul class="package-features">
+                    <li>Unlimited Stations</li>
+                    <li>Live Cooking Demos</li>
+                    <li>5-Star Appetizers</li>
+                    <li>Gourmet Dessert Bar</li>
+                    <li>Premium Bar & Wine</li>
+                    <li>Full Service Staff</li>
+                </ul>
+                <button class="cta-button" onclick="selectPackage('Corporate', 65)">Select Package</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact">
+        <h2 class="section-title">Book Your Event</h2>
+        <form class="contact-form" onsubmit="handleBooking(event)">
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" required placeholder="Your Name">
+            </div>
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" required placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+                <label>Event Date</label>
+                <input type="date" required>
+            </div>
+            <div class="form-group">
+                <label>Number of Guests</label>
+                <input type="number" min="10" required placeholder="Minimum 10 guests">
+            </div>
+            <div class="form-group">
+                <label>Event Type</label>
+                <select required>
+                    <option value="">Select Event Type</option>
+                    <option>Wedding</option>
+                    <option>Corporate Event</option>
+                    <option>Birthday Party</option>
+                    <option>Anniversary</option>
+                    <option>Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Special Requests</label>
+                <textarea rows="4" placeholder="Dietary restrictions, theme preferences, etc."></textarea>
+            </div>
+            <button type="submit" class="submit-btn">Submit Booking Request</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Double Take Catering. All rights reserved.</p>
+        <p>Call us: (555) 123-4567 | Email: info@doubletakecatering.com</p>
+    </footer>
+
+    <!-- Cart Icon -->
+    <div class="cart-icon" onclick="toggleCart()">
+        🛒
+        <span class="cart-count" id="cartCount">0</span>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header">
+            <h3>Your Order</h3>
+            <button class="close-cart" onclick="toggleCart()">✕</button>
+        </div>
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items injected here -->
+        </div>
+        <div class="cart-footer">
+            <div class="cart-total">
+                <span>Total:</span>
+                <span id="cartTotal">$0.00</span>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Proceed to Checkout</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
