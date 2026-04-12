@@ -1,4 +1,4 @@
-// === MENU DATA (EDIT THIS TO MATCH YOUR REAL MENU) ===
+// === MENU DATA ===
 const menuItems = [
     { id: 1, name: "Jollof Rice", category: "main", price: 10, description: "Delicious Nigerian jollof rice" },
     { id: 2, name: "Fried Rice", category: "main", price: 10, description: "Classic fried rice with vegetables" },
@@ -17,9 +17,12 @@ document.addEventListener('DOMContentLoaded', () => {
     renderMenu();
     updateCartUI();
 
+    const navbar = document.getElementById('navbar');
+
     window.addEventListener('scroll', () => {
-        const navbar = document.getElementById('navbar');
-        navbar.classList.toggle('scrolled', window.scrollY > 50);
+        if (navbar) {
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
+        }
     });
 
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -34,6 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
 // === MENU ===
 function renderMenu() {
     const grid = document.getElementById('menuGrid');
+    if (!grid) return;
+
     grid.innerHTML = '';
 
     const filtered = currentFilter === 'all'
@@ -64,7 +69,6 @@ function renderMenu() {
             </div>
         `;
 
-        // ✅ Proper event listener (FIXED)
         card.querySelector('.add-to-cart').addEventListener('click', () => {
             addToCart(item.id);
         });
@@ -78,9 +82,10 @@ function filterMenu(category) {
 
     document.querySelectorAll('.filter-btn').forEach(btn => {
         btn.classList.remove('active');
+
         if (
             btn.textContent.toLowerCase().includes(category) ||
-            (category === 'all' && btn.textContent.includes('All'))
+            (category === 'all' && btn.textContent.toLowerCase().includes('all'))
         ) {
             btn.classList.add('active');
         }
@@ -92,6 +97,8 @@ function filterMenu(category) {
 // === CART ===
 function addToCart(itemId) {
     const item = menuItems.find(i => i.id === itemId);
+    if (!item) return;
+
     const existing = cart.find(i => i.id === itemId);
 
     if (existing) {
@@ -119,6 +126,8 @@ function updateCartUI() {
     const cartItems = document.getElementById('cartItems');
     const cartCount = document.getElementById('cartCount');
     const cartTotal = document.getElementById('cartTotal');
+
+    if (!cartItems || !cartCount || !cartTotal) return;
 
     const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartCount.textContent = totalItems;
@@ -168,24 +177,48 @@ function checkout() {
 
 // === UI HELPERS ===
 function toggleCart() {
-    document.getElementById('cartSidebar').classList.toggle('open');
-    document.getElementById('cartOverlay').classList.toggle('active');
+    const sidebar = document.getElementById('cartSidebar');
+    const overlay = document.getElementById('cartOverlay');
+
+    if (sidebar) sidebar.classList.toggle('open');
+    if (overlay) overlay.classList.toggle('active');
 }
 
 function showNotification(msg) {
     const n = document.createElement('div');
     n.textContent = msg;
+
     n.style.cssText = `
-        position:fixed;top:100px;right:20px;
-        background:#333;color:#fff;padding:10px 20px;
-        border-radius:5px;z-index:9999;
+        position:fixed;
+        top:100px;
+        right:20px;
+        background:#333;
+        color:#fff;
+        padding:10px 20px;
+        border-radius:5px;
+        z-index:9999;
+        opacity:0;
+        transform:translateY(-10px);
+        transition: all 0.3s ease;
     `;
+
     document.body.appendChild(n);
 
-    setTimeout(() => n.remove(), 3000);
+    setTimeout(() => {
+        n.style.opacity = '1';
+        n.style.transform = 'translateY(0)';
+    }, 50);
+
+    setTimeout(() => {
+        n.style.opacity = '0';
+        n.style.transform = 'translateY(-10px)';
+        setTimeout(() => n.remove(), 300);
+    }, 2500);
 }
 
 function toggleMobileMenu() {
     const nav = document.querySelector('.nav-links');
+    if (!nav) return;
+
     nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
 }
