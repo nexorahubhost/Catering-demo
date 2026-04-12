@@ -199,20 +199,30 @@
     </form>
 </section>
 
-<!-- CART -->
+<!-- CART SIDEBAR - ONLY PLACE FOR ORDER BUTTON -->
 <div id="cartSidebar" class="cart-sidebar" role="dialog" aria-label="Shopping cart" aria-hidden="true">
-    <h3>Your Order</h3>
+    <div class="cart-header">
+        <h3>Your Order</h3>
+        <button type="button" class="cart-close-btn" onclick="toggleCart()" aria-label="Close cart">
+            ✕
+        </button>
+    </div>
 
-    <div id="cartItems"></div>
+    <div id="cartItems" class="cart-items-container"></div>
 
-    <p><strong>Total: ₦<span id="cartTotal">0</span></strong></p>
-
-    <button type="button" onclick="checkout()" class="cta-button">
-        Order on WhatsApp
-    </button>
+    <div class="cart-footer">
+        <div class="cart-total-row">
+            <strong>Total:</strong>
+            <strong>₦<span id="cartTotal">0</span></strong>
+        </div>
+        <button type="button" onclick="checkout()" class="cta-button checkout-btn">
+            Order on WhatsApp
+        </button>
+    </div>
 </div>
 
-<div id="cartOverlay" onclick="toggleCart()" role="button" tabindex="0" aria-label="Close cart" onkeydown="if(event.key==='Enter'||event.key===' ')toggleCart()"></div>
+<!-- OVERLAY -->
+<div id="cartOverlay" class="cart-overlay" onclick="toggleCart()" role="button" tabindex="0" aria-label="Close cart"></div>
 
 <!-- FOOTER -->
 <footer>
