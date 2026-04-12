@@ -21,8 +21,6 @@ function updateCartUI() {
     const cartCount = document.getElementById('cartCount');
     const cartTotal = document.getElementById('cartTotal');
 
-    if (!cartItems || !cartCount || !cartTotal) return;
-
     let totalItems = 0;
     let totalPrice = 0;
 
@@ -34,12 +32,18 @@ function updateCartUI() {
             totalPrice += item.price * item.quantity;
 
             return `
-                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-                    <div>
-                        <strong>${item.name}</strong><br>
-                        ₦${item.price} x ${item.quantity}
+                <div style="margin-bottom:15px;">
+                    <strong>${item.name}</strong>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:5px;">
+                        
+                        <div>
+                            <button onclick="changeQty(${index}, -1)">-</button>
+                            <span style="margin:0 8px;">${item.quantity}</span>
+                            <button onclick="changeQty(${index}, 1)">+</button>
+                        </div>
+
+                        <span>₦${item.price * item.quantity}</span>
                     </div>
-                    <button onclick="removeFromCart(${index})" style="background:red;color:white;border:none;padding:4px 8px;border-radius:4px;cursor:pointer;">✕</button>
                 </div>
             `;
         }).join('');
@@ -49,6 +53,18 @@ function updateCartUI() {
     cartTotal.textContent = totalPrice;
 }
 
+// === CHANGE QUANTITY ===
+function changeQty(index, delta) {
+    cart[index].quantity += delta;
+
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+
+    updateCartUI();
+}
+
+
 // === REMOVE ITEM ===
 function removeFromCart(index) {
     cart.splice(index, 1);
@@ -57,10 +73,11 @@ function removeFromCart(index) {
 
 // === TOGGLE CART ===
 function toggleCart() {
-    const cart = document.getElementById('cartSidebar');
-    if (cart) {
-        cart.classList.toggle('open');
-    }
+    const sidebar = document.getElementById('cartSidebar');
+    const overlay = document.getElementById('cartOverlay');
+
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('active');
 }
 
 // === FILTER MENU ===
@@ -76,6 +93,22 @@ function filterMenu(category) {
             item.style.display = 'none';
         }
     });
+}
+
+// === SELECT PACKAGE ===
+
+function selectPackage(name, price) {
+    const existing = cart.find(item => item.name === name);
+
+    if (existing) {
+        existing.quantity += 1;
+    } else {
+        cart.push({ name: name + " Package", price, quantity: 1 });
+    }
+
+    updateCartUI();
+    toggleCart();
+    showNotification(`${name} package added`);
 }
 
 // === WHATSAPP CHECKOUT ===
@@ -99,7 +132,7 @@ function checkout() {
     message += `%0ATotal: ₦${total}%0A`;
     message += "%0AName:%0APhone:%0AAddress:";
 
-    const phoneNumber = "234XXXXXXXXXX"; // CHANGE THIS
+    const phoneNumber = "2347050216396"; // CHANGE THIS
 
     window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
 
@@ -110,8 +143,24 @@ function checkout() {
 // === BOOKING FORM ===
 function handleBooking(e) {
     e.preventDefault();
-    alert("Booking submitted! We’ll contact you shortly.");
+
+    const inputs = document.querySelectorAll('.contact-form input');
+    const name = inputs[0].value;
+    const email = inputs[1].value;
+    const date = inputs[2].value;
+    const guests = inputs[3].value;
+
+    let message = `Hello, I want to book an event:%0A%0A`;
+    message += `Name: ${name}%0A`;
+    message += `Email: ${email}%0A`;
+    message += `Date: ${date}%0A`;
+    message += `Guests: ${guests}%0A`;
+
+    const phoneNumber = "2347050216396";
+
+    window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
 }
+
 
 // === NOTIFICATION ===
 function showNotification(msg) {
