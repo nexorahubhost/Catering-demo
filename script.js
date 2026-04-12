@@ -1,6 +1,6 @@
 /**
  * Double Take Catering - Shopping Cart Application
- * Features: XSS protection, localStorage persistence, keyboard navigation
+ * Fixed cart functionality with proper state management
  */
 
 (function() {
@@ -15,11 +15,13 @@
 
     // === STATE ===
     let cart = [];
+    let isCartOpen = false;
 
     // === INITIALIZATION ===
     document.addEventListener('DOMContentLoaded', function() {
         loadCartFromStorage();
         updateCartUI();
+        initEventListeners();
         
         // Set minimum date to today for event date
         const dateInput = document.getElementById('eventDate');
@@ -27,19 +29,31 @@
             const today = new Date().toISOString().split('T')[0];
             dateInput.setAttribute('min', today);
         }
+    });
+
+    // === EVENT LISTENERS ===
+    function initEventListeners() {
+        // Keyboard support
+        document.addEventListener('keydown', handleKeyDown);
         
-        // Keyboard support for Escape key to close cart
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                const sidebar = document.getElementById('cartSidebar');
-                if (sidebar && sidebar.classList.contains('open')) {
+        // Prevent scroll when cart is open
+        document.addEventListener('click', function(e) {
+            if (isCartOpen && e.target.closest('.cart-sidebar') === null && e.target.closest('.cart-btn') === null) {
+                // Click outside cart closes it
+                if (e.target.classList.contains('cart-overlay')) {
                     toggleCart();
                 }
             }
         });
-    });
+    }
 
-    // === SANITIZATION (XSS Protection) ===
+    function handleKeyDown(e) {
+        if (e.key === 'Escape' && isCartOpen) {
+            toggleCart();
+        }
+    }
+
+    // === SANITIZATION ===
     function sanitize(str) {
         if (typeof str !== 'string') return '';
         const div = document.createElement('div');
@@ -52,7 +66,7 @@
         try {
             localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(cart));
         } catch (e) {
-            console.warn('Could not save cart to localStorage:', e);
+            console.warn('Could not save cart:', e);
         }
     }
 
@@ -66,7 +80,7 @@
                 }
             }
         } catch (e) {
-            console.warn('Could not load cart from localStorage:', e);
+            console.warn('Could not load cart:', e);
             cart = [];
         }
     }
@@ -93,12 +107,15 @@
         if (existing) {
             existing.quantity += 1;
         } else {
-            cart.push({ name: name.trim(), price: price, quantity: 1 });
+            cart.push({ name: name.trim(), price: price, quantity: 1, id: Date.now() });
         }
 
         saveCartToStorage();
         updateCartUI();
         showNotification(`${sanitize(name)} added to cart`);
+        
+        // Optional: Open cart when item added
+        // toggleCart();
     };
 
     // === UPDATE CART UI ===
@@ -107,9 +124,8 @@
         const cartCount = document.getElementById('cartCount');
         const cartTotal = document.getElementById('cartTotal');
 
-        // Error handling for missing elements
         if (!cartItems || !cartCount || !cartTotal) {
-            console.error('Cart UI elements not found');
+            console.error('Cart elements not found');
             return;
         }
 
@@ -117,48 +133,58 @@
         let totalPrice = 0;
 
         if (cart.length === 0) {
-            cartItems.innerHTML = `<p class="empty-cart">Your cart is empty</p>`;
+            cartItems.innerHTML = `
+                <div class="empty-cart">
+                    <div class="empty-cart-icon">🛒</div>
+                    <p>Your cart is empty</p>
+                    <p style="font-size: 0.9rem; margin-top: 0.5rem;">Add items from the menu</p>
+                </div>
+            `;
         } else {
-            const fragment = document.createDocumentFragment();
+            cartItems.innerHTML = '';
             
             cart.forEach((item, index) => {
                 totalItems += item.quantity;
                 totalPrice += item.price * item.quantity;
 
-                const itemDiv = document.createElement('div');
-                itemDiv.className = 'cart-item';
-                itemDiv.innerHTML = `
-                    <strong>${sanitize(item.name)}</strong>
-                    <div class="cart-item-controls">
-                        <div>
-                            <button type="button" class="qty-btn" onclick="changeQty(${index}, -1)" aria-label="Decrease quantity">-</button>
-                            <span style="margin:0 8px;">${item.quantity}</span>
+                const itemEl = document.createElement('div');
+                itemEl.className = 'cart-item';
+                itemEl.innerHTML = `
+                    <div class="cart-item-name">${sanitize(item.name)}</div>
+                    <div class="cart-item-row">
+                        <div class="quantity-controls">
+                            <button type="button" class="qty-btn" onclick="changeQty(${index}, -1)" aria-label="Decrease quantity" ${item.quantity <= 1 ? 'disabled' : ''}>−</button>
+                            <span class="quantity-display">${item.quantity}</span>
                             <button type="button" class="qty-btn" onclick="changeQty(${index}, 1)" aria-label="Increase quantity">+</button>
-                            <button type="button" class="remove-btn" onclick="removeFromCart(${index})" aria-label="Remove item">Remove</button>
                         </div>
-                        <span>${CONFIG.CURRENCY}${(item.price * item.quantity).toLocaleString()}</span>
+                        <span class="cart-item-price">${CONFIG.CURRENCY}${(item.price * item.quantity).toLocaleString()}</span>
                     </div>
+                    <button type="button" class="remove-btn" onclick="removeFromCart(${index})">Remove item</button>
                 `;
-                fragment.appendChild(itemDiv);
+                cartItems.appendChild(itemEl);
             });
-            
-            cartItems.innerHTML = '';
-            cartItems.appendChild(fragment);
         }
 
         cartCount.textContent = totalItems;
         cartTotal.textContent = totalPrice.toLocaleString();
+        
+        // Update cart button visibility
+        const cartBtn = document.querySelector('.cart-btn');
+        if (cartBtn) {
+            cartBtn.style.transform = totalItems > 0 ? 'scale(1.05)' : 'scale(1)';
+        }
     };
 
     // === CHANGE QUANTITY ===
     window.changeQty = function(index, delta) {
         if (index < 0 || index >= cart.length) return;
         
-        cart[index].quantity += delta;
-
-        if (cart[index].quantity <= 0) {
-            cart.splice(index, 1);
-        }
+        const newQuantity = cart[index].quantity + delta;
+        
+        // Prevent going below 1 (use remove button instead)
+        if (newQuantity < 1) return;
+        
+        cart[index].quantity = newQuantity;
 
         saveCartToStorage();
         updateCartUI();
@@ -173,26 +199,36 @@
         
         saveCartToStorage();
         updateCartUI();
-        showNotification(`${sanitize(itemName)} removed from cart`);
+        showNotification(`${sanitize(itemName)} removed`, 'info');
     };
 
     // === TOGGLE CART ===
     window.toggleCart = function() {
         const sidebar = document.getElementById('cartSidebar');
         const overlay = document.getElementById('cartOverlay');
+        const body = document.body;
 
         if (!sidebar || !overlay) return;
 
-        sidebar.classList.toggle('open');
-        overlay.classList.toggle('active');
-        
-        // Update ARIA attributes for accessibility
-        const isOpen = sidebar.classList.contains('open');
-        sidebar.setAttribute('aria-hidden', !isOpen);
-        
-        // Focus management
-        if (isOpen) {
-            sidebar.focus();
+        isCartOpen = !isCartOpen;
+
+        if (isCartOpen) {
+            sidebar.classList.add('open');
+            overlay.classList.add('active');
+            sidebar.setAttribute('aria-hidden', 'false');
+            body.style.overflow = 'hidden'; // Prevent background scroll
+        } else {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('active');
+            sidebar.setAttribute('aria-hidden', 'true');
+            body.style.overflow = ''; // Restore scroll
+        }
+    };
+
+    // === CLOSE CART (explicit) ===
+    window.closeCart = function() {
+        if (isCartOpen) {
+            toggleCart();
         }
     };
 
@@ -207,24 +243,21 @@
     // === FILTER MENU ===
     window.filterMenu = function(category) {
         const items = document.querySelectorAll('.menu-item');
+        const buttons = document.querySelectorAll('.menu-filters .cta-button');
         
-        // Update active button state
-        const buttons = document.querySelectorAll('.menu-filters button');
+        // Update active button
         buttons.forEach(btn => {
-            btn.style.background = '';
-            btn.style.color = '';
+            btn.classList.remove('active');
+            if (btn.textContent.toLowerCase().includes(category) || (category === 'all' && btn.textContent === 'All')) {
+                btn.classList.add('active');
+            }
         });
-        
-        if (event && event.target) {
-            event.target.style.background = 'var(--accent-color)';
-            event.target.style.color = 'white';
-        }
 
         items.forEach(item => {
             const itemCategory = item.getAttribute('data-category');
-
             if (category === 'all' || itemCategory === category) {
                 item.style.display = 'flex';
+                item.style.animation = 'fadeIn 0.3s ease';
             } else {
                 item.style.display = 'none';
             }
@@ -240,13 +273,13 @@
         if (existing) {
             existing.quantity += 1;
         } else {
-            cart.push({ name: name.trim(), price: price, quantity: 1, type: 'package' });
+            cart.push({ name: name.trim(), price: price, quantity: 1, type: 'package', id: Date.now() });
         }
 
         saveCartToStorage();
         updateCartUI();
         toggleCart();
-        showNotification(`${sanitize(name)} package added to cart`);
+        showNotification(`${sanitize(name)} package added`);
     };
 
     // === WHATSAPP CHECKOUT ===
@@ -273,6 +306,7 @@
 
         window.open(whatsappUrl, "_blank");
 
+        // Clear cart after checkout
         cart = [];
         saveCartToStorage();
         updateCartUI();
@@ -291,7 +325,7 @@
         const guestsInput = document.getElementById('guests');
 
         if (!nameInput || !emailInput || !eventTypeInput || !dateInput || !guestsInput) {
-            showNotification('Form error. Please refresh the page.', 'error');
+            showNotification('Form error. Please refresh.', 'error');
             return;
         }
 
@@ -299,20 +333,18 @@
         const email = emailInput.value.trim();
         const eventType = eventTypeInput.value;
         const date = dateInput.value;
-        const guests = guestsInput.value;
+        const guests = parseInt(guestsInput.value);
 
-        // Validation
         if (!name || !email || !eventType || !date || !guests) {
             showNotification('Please fill in all fields', 'error');
             return;
         }
 
         if (guests < 1) {
-            showNotification('Number of guests must be at least 1', 'error');
+            showNotification('Guests must be at least 1', 'error');
             return;
         }
 
-        // Validate event date is not in the past
         const selectedDate = new Date(date);
         const today = new Date();
         today.setHours(0, 0, 0, 0);
@@ -334,7 +366,6 @@
 
         window.open(whatsappUrl, "_blank");
         
-        // Reset form
         e.target.reset();
         showNotification('Booking request sent!');
     };
@@ -350,23 +381,28 @@
         n.setAttribute('role', 'alert');
         n.setAttribute('aria-live', 'polite');
 
-        const bgColor = type === 'error' ? '#dc2626' : '#0f172a';
+        const colors = {
+            success: '#0f172a',
+            error: '#dc2626',
+            info: '#0369a1'
+        };
         
         n.style.cssText = `
             position: fixed;
-            top: 90px;
+            top: 100px;
             right: 20px;
-            background: ${bgColor};
+            background: ${colors[type] || colors.success};
             color: #fff;
-            padding: 12px 20px;
-            border-radius: 8px;
+            padding: 14px 24px;
+            border-radius: 10px;
             z-index: 9999;
             opacity: 0;
             transform: translateY(-10px);
             transition: all 0.3s ease;
-            max-width: 300px;
+            max-width: 320px;
             word-wrap: break-word;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            font-weight: 500;
         `;
 
         document.body.appendChild(n);
@@ -382,5 +418,15 @@
             setTimeout(() => n.remove(), 300);
         }, 3000);
     }
+
+    // === ANIMATION KEYFRAMES ===
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    `;
+    document.head.appendChild(style);
 
 })();
