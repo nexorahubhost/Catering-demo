@@ -1,8 +1,8 @@
 /* === CUSTOMIZABLE COLOR VARIABLES === */
 :root {
-    --primary-color: #c89b3c;        /* Rich gold */
-    --secondary-color: #0f172a;      /* Deep navy */
-    --accent-color: #e11d48;         /* Strong red */
+    --primary-color: #c89b3c;
+    --secondary-color: #0f172a;
+    --accent-color: #e11d48;
     --text-light: #f8fafc;
     --text-dark: #0f172a;
     --bg-light: #f1f5f9;
@@ -36,7 +36,7 @@ nav {
 
 .nav-container {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: auto;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -65,6 +65,16 @@ nav {
     color: var(--primary-color);
 }
 
+/* === NAV CART BUTTON === */
+.cart-btn {
+    cursor: pointer;
+    color: white;
+    font-size: 18px;
+    background: var(--primary-color);
+    padding: 8px 12px;
+    border-radius: 20px;
+}
+
 /* === HERO === */
 .hero {
     height: 100vh;
@@ -85,17 +95,17 @@ nav {
 }
 
 .hero-content p {
-    font-size: 1.2rem;
     margin-bottom: 2rem;
 }
 
 /* === BUTTON === */
 .cta-button {
-    padding: 0.9rem 2rem;
+    padding: 0.7rem 1.2rem;
     background: var(--primary-color);
     color: var(--secondary-color);
-    border-radius: 30px;
-    text-decoration: none;
+    border-radius: 25px;
+    border: none;
+    cursor: pointer;
     font-weight: bold;
     transition: var(--transition);
 }
@@ -107,7 +117,7 @@ nav {
 
 /* === SECTIONS === */
 section {
-    padding: 4rem 5%;
+    padding: 5rem 5%;
     max-width: 1200px;
     margin: auto;
 }
@@ -131,6 +141,10 @@ section {
     border-radius: 12px;
     transition: var(--transition);
     box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 
 .menu-item:hover {
@@ -140,6 +154,11 @@ section {
 .price {
     color: var(--accent-color);
     font-weight: bold;
+}
+
+/* 🔥 FIXED BUTTON INSIDE MENU */
+.menu-item button {
+    margin-top: auto;
 }
 
 /* === PACKAGES === */
@@ -159,12 +178,6 @@ section {
     transform: translateY(-5px);
 }
 
-.package-price {
-    font-size: 2rem;
-    color: var(--primary-color);
-    margin: 1rem 0;
-}
-
 /* === FORM === */
 .contact-form {
     max-width: 600px;
@@ -174,7 +187,7 @@ section {
     border-radius: 12px;
 }
 
-input, select, textarea {
+input, select {
     width: 100%;
     padding: 0.7rem;
     margin-top: 0.5rem;
@@ -192,8 +205,38 @@ input, select, textarea {
     border-radius: 6px;
 }
 
-.submit-btn:hover {
-    background: var(--primary-color);
+/* === CART SIDEBAR === */
+.cart-sidebar {
+    position: fixed;
+    top: 0;
+    right: -350px;
+    width: 350px;
+    height: 100%;
+    background: white;
+    padding: 20px;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.15);
+
+    transition: right 0.4s ease-in-out;
+    z-index: 2000;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-sidebar.open {
+    right: 0;
+}
+
+/* cart content */
+#cartItems {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+/* checkout button fixed at bottom */
+.cart-sidebar .cta-button {
+    width: 100%;
 }
 
 /* === FOOTER === */
@@ -213,4 +256,4 @@ footer {
     .hero-content h1 {
         font-size: 2rem;
     }
-        }
+}
