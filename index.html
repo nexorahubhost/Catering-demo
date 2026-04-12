@@ -13,6 +13,9 @@
     <div class="nav-container">
         <a href="#" class="logo">🍽️ Double Take Catering</a>
         <ul class="nav-links">
+            <div class="cart-btn" onclick="toggleCart()">
+    🛒 <span id="cartCount">0</span>
+            </div>
             <li><a href="#home">Home</a></li>
             <li><a href="#menu">Menu</a></li>
             <li><a href="#packages">Packages</a></li>
@@ -63,35 +66,35 @@
             <h3>Small Chops Combo</h3>
             <p>Puff puff, samosa, spring rolls & gizdodo</p>
             <span class="price">₦2500</span>
-            <button onclick="addToCart('Small Chops Combo', 2500)">Add to Cart</button>
+            <button class="cta-button" onclick="addToCart('Small Chops Combo', 2500)">Add to Cart</button>
         </div>
 
         <div class="menu-item" data-category="main">
             <h3>Pounded Yam & Egusi</h3>
             <p>Rich egusi soup with assorted meat</p>
             <span class="price">₦4500</span>
-            <button onclick="addToCart('Pounded Yam & Egusi', 4500)">Add to Cart</button>
+            <button class="cta-button" onclick="addToCart('Pounded Yam & Egusi', 4500)">Add to Cart</button>
         </div>
 
         <div class="menu-item" data-category="dessert">
             <h3>Coconut Candy & Cake</h3>
             <p>Sweet treats to finish your meal</p>
             <span class="price">₦1500</span>
-            <button onclick="addToCart('Coconut Candy & Cake', 1500)">Add to Cart</button>
+            <button class="cta-button" onclick="addToCart('Coconut Candy & Cake', 1500)">Add to Cart</button>
         </div>
 
         <div class="menu-item" data-category="beverage">
             <h3>Zobo Drink</h3>
             <p>Freshly made zobo with natural flavors</p>
             <span class="price">₦800</span>
-            <button onclick="addToCart('Zobo Drink', 800)">Add to Cart</button>
+            <button class="cta-button" onclick="addToCart('Zobo Drink', 800)">Add to Cart</button>
         </div>
 
         <div class="menu-item" data-category="beverage">
             <h3>Chapman</h3>
             <p>Refreshing Nigerian cocktail</p>
             <span class="price">₦1200</span>
-            <button onclick="addToCart('Chapman', 1200)">Add to Cart</button>
+            <button class="cta-button" onclick="addToCart('Chapman', 1200)">Add to Cart</button>
         </div>
 
     </div>
@@ -159,17 +162,17 @@
 </section>
 
 <!-- CART -->
-<div class="cart-icon" onclick="toggleCart()">
-    🛒 <span id="cartCount">0</span>
-</div>
-
 <div id="cartSidebar" class="cart-sidebar">
     <h3>Your Order</h3>
-    <div id="cartItems"></div>
-    <p>Total: ₦<span id="cartTotal">0</span></p>
-    <button onclick="checkout()" class="cta-button">Order on WhatsApp</button>
-</div>
 
+    <div id="cartItems"></div>
+
+    <p><strong>Total: ₦<span id="cartTotal">0</span></strong></p>
+
+    <button onclick="checkout()" class="cta-button">
+        Order on WhatsApp
+    </button>
+</div>
 <!-- FOOTER -->
 <footer>
     <p>&copy; 2026 Double Take Catering</p>
