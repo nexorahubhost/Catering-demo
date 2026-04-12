@@ -13,13 +13,13 @@
     <div class="nav-container">
         <a href="#" class="logo">🍽️ Double Take Catering</a>
         <ul class="nav-links">
-            <div class="cart-btn" onclick="toggleCart()">
-    🛒 <span id="cartCount">0</span>
-            </div>
             <li><a href="#home">Home</a></li>
             <li><a href="#menu">Menu</a></li>
             <li><a href="#packages">Packages</a></li>
             <li><a href="#contact">Book Now</a></li>
+            <div class="cart-btn" onclick="toggleCart()">
+    🛒 <span id="cartCount">0</span>
+            </div>
         </ul>
     </div>
 </nav>
@@ -38,11 +38,11 @@
     <h2 class="section-title">Our Menu</h2>
 
     <div class="menu-filters">
-        <button onclick="filterMenu('all')" class="filter-btn">All</button>
-        <button onclick="filterMenu('appetizer')" class="filter-btn">Small Chops</button>
-        <button onclick="filterMenu('main')" class="filter-btn">Main</button>
-        <button onclick="filterMenu('dessert')" class="filter-btn">Dessert</button>
-        <button onclick="filterMenu('beverage')" class="filter-btn">Drinks</button>
+        <button onclick="filterMenu('all')" class="cta-button">All</button>
+        <button onclick="filterMenu('appetizer')" class="cta-button">Small Chops</button>
+        <button onclick="filterMenu('main')" class="cta-button">Main</button>
+        <button onclick="filterMenu('dessert')" class="cta-button">Dessert</button>
+        <button onclick="filterMenu('beverage')" class="cta-button">Drinks</button>
     </div>
 
     <div class="menu-grid">
@@ -52,14 +52,14 @@
             <h3>Jollof Rice & Chicken</h3>
             <p>Smoky party jollof served with grilled chicken</p>
             <span class="price">₦3500</span>
-            <button onclick="addToCart('Jollof Rice & Chicken', 3500)">Add to Cart</button>
+            <button class="cta-button" onclick="addToCart('Jollof Rice & Chicken', 3500)">Add to Cart</button>
         </div>
 
         <div class="menu-item" data-category="main">
             <h3>Fried Rice & Turkey</h3>
             <p>Classic fried rice with seasoned turkey</p>
             <span class="price">₦4000</span>
-            <button onclick="addToCart('Fried Rice & Turkey', 4000)">Add to Cart</button>
+            <button class="cta-button" onclick="addToCart('Fried Rice & Turkey', 4000)">Add to Cart</button>
         </div>
 
         <div class="menu-item" data-category="appetizer">
