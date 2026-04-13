@@ -44,11 +44,11 @@
     <h2 class="section-title">Our Menu</h2>
 
     <div class="menu-filters">
-        <button type="button" onclick="filterMenu('all')" class="cta-button">All</button>
-        <button type="button" onclick="filterMenu('appetizer')" class="cta-button">Small Chops</button>
-        <button type="button" onclick="filterMenu('main')" class="cta-button">Main</button>
-        <button type="button" onclick="filterMenu('dessert')" class="cta-button">Dessert</button>
-        <button type="button" onclick="filterMenu('beverage')" class="cta-button">Drinks</button>
+        <button type="button" onclick="filterMenu('all', this)" class="cta-button active">All</button>
+        <button type="button" onclick="filterMenu('appetizer', this)" class="cta-button">Small Chops</button>
+        <button type="button" onclick="filterMenu('main', this)" class="cta-button">Main</button>
+        <button type="button" onclick="filterMenu('dessert', this)" class="cta-button">Dessert</button>
+        <button type="button" onclick="filterMenu('beverage', this)" class="cta-button">Drinks</button>
     </div>
 
     <div class="menu-grid">
@@ -57,35 +57,35 @@
         <div class="menu-item" data-category="main">
             <h3>Jollof Rice & Chicken</h3>
             <p>Smoky party jollof served with grilled chicken</p>
-            <span class="price">₦3500</span>
+            <span class="price">₦3,500</span>
             <button type="button" class="cta-button" onclick="addToCart('Jollof Rice & Chicken', 3500)">Add to Cart</button>
         </div>
 
         <div class="menu-item" data-category="main">
             <h3>Fried Rice & Turkey</h3>
             <p>Classic fried rice with seasoned turkey</p>
-            <span class="price">₦4000</span>
+            <span class="price">₦4,000</span>
             <button type="button" class="cta-button" onclick="addToCart('Fried Rice & Turkey', 4000)">Add to Cart</button>
         </div>
 
         <div class="menu-item" data-category="appetizer">
             <h3>Small Chops Combo</h3>
             <p>Puff puff, samosa, spring rolls & gizdodo</p>
-            <span class="price">₦2500</span>
+            <span class="price">₦2,500</span>
             <button type="button" class="cta-button" onclick="addToCart('Small Chops Combo', 2500)">Add to Cart</button>
         </div>
 
         <div class="menu-item" data-category="main">
             <h3>Pounded Yam & Egusi</h3>
             <p>Rich egusi soup with assorted meat</p>
-            <span class="price">₦4500</span>
+            <span class="price">₦4,500</span>
             <button type="button" class="cta-button" onclick="addToCart('Pounded Yam & Egusi', 4500)">Add to Cart</button>
         </div>
 
         <div class="menu-item" data-category="dessert">
             <h3>Coconut Candy & Cake</h3>
             <p>Sweet treats to finish your meal</p>
-            <span class="price">₦1500</span>
+            <span class="price">₦1,500</span>
             <button type="button" class="cta-button" onclick="addToCart('Coconut Candy & Cake', 1500)">Add to Cart</button>
         </div>
 
@@ -99,7 +99,7 @@
         <div class="menu-item" data-category="beverage">
             <h3>Chapman</h3>
             <p>Refreshing Nigerian cocktail</p>
-            <span class="price">₦1200</span>
+            <span class="price">₦1,200</span>
             <button type="button" class="cta-button" onclick="addToCart('Chapman', 1200)">Add to Cart</button>
         </div>
 
@@ -114,7 +114,7 @@
 
         <div class="package-card">
             <h3>Owambe Starter</h3>
-            <p>₦12,000 / person</p>
+            <p class="package-price">₦12,000 <span>/ person</span></p>
             <ul class="package-features">
                 <li>Rice Dishes</li>
                 <li>Chicken or Turkey</li>
@@ -126,8 +126,9 @@
         </div>
 
         <div class="package-card featured">
+            <div class="popular-badge">POPULAR</div>
             <h3>Party Standard</h3>
-            <p>₦20,000 / person</p>
+            <p class="package-price">₦20,000 <span>/ person</span></p>
             <ul class="package-features">
                 <li>Jollof + Fried Rice</li>
                 <li>Chicken & Beef</li>
@@ -140,7 +141,7 @@
 
         <div class="package-card">
             <h3>Premium Owambe</h3>
-            <p>₦35,000 / person</p>
+            <p class="package-price">₦35,000 <span>/ person</span></p>
             <ul class="package-features">
                 <li>Multiple Dishes</li>
                 <li>Asun, Turkey & Assorted Meat</li>
@@ -161,12 +162,12 @@
     <form class="contact-form" onsubmit="handleBooking(event)">
         <div class="form-group">
             <label for="fullName">Full Name</label>
-            <input type="text" id="fullName" name="fullName" placeholder="Full Name" required aria-required="true">
+            <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required aria-required="true">
         </div>
         
         <div class="form-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" placeholder="Email" required aria-required="true">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="your@email.com" required aria-required="true">
         </div>
         
         <div class="form-group">
@@ -192,18 +193,18 @@
         
         <div class="form-group">
             <label for="guests">Number of Guests</label>
-            <input type="number" id="guests" name="guests" placeholder="Guests" min="1" required aria-required="true">
+            <input type="number" id="guests" name="guests" placeholder="How many guests?" min="1" required aria-required="true">
         </div>
         
         <button type="submit" class="submit-btn">Submit Booking</button>
     </form>
 </section>
 
-<!-- CART SIDEBAR - ONLY PLACE FOR ORDER BUTTON -->
+<!-- CART SIDEBAR -->
 <div id="cartSidebar" class="cart-sidebar" role="dialog" aria-label="Shopping cart" aria-hidden="true">
     <div class="cart-header">
         <h3>Your Order</h3>
-        <button type="button" class="cart-close-btn" onclick="toggleCart()" aria-label="Close cart">
+        <button type="button" class="cart-close-btn" onclick="closeCart()" aria-label="Close cart">
             ✕
         </button>
     </div>
@@ -212,21 +213,21 @@
 
     <div class="cart-footer">
         <div class="cart-total-row">
-            <strong>Total:</strong>
-            <strong>₦<span id="cartTotal">0</span></strong>
+            <span>Total:</span>
+            <span class="total-amount">₦<span id="cartTotal">0</span></span>
         </div>
         <button type="button" onclick="checkout()" class="cta-button checkout-btn">
-            Order on WhatsApp
+            <span>💬</span> Order on WhatsApp
         </button>
     </div>
 </div>
 
 <!-- OVERLAY -->
-<div id="cartOverlay" class="cart-overlay" onclick="toggleCart()" role="button" tabindex="0" aria-label="Close cart"></div>
+<div id="cartOverlay" class="cart-overlay" onclick="closeCart()" role="button" tabindex="0" aria-label="Close cart"></div>
 
 <!-- FOOTER -->
 <footer>
-    <p>&copy; 2026 Double Take Catering</p>
+    <p>&copy; 2026 Double Take Catering. All rights reserved.</p>
 </footer>
 
 <script src="script.js"></script>
