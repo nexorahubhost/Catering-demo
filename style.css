@@ -9,8 +9,7 @@
     --bg-white: #ffffff;
     --transition: all 0.3s ease;
     
-    /* Z-index scale - properly layered */
-    --z-base: 1;
+    /* Z-index scale */
     --z-nav: 100;
     --z-overlay: 200;
     --z-sidebar: 300;
@@ -165,12 +164,18 @@ nav {
     text-align: center;
     color: var(--text-light);
     margin-top: 0;
+    padding: 0 1rem;
+}
+
+.hero-content {
+    max-width: 800px;
 }
 
 .hero-content h1 {
     font-size: 3.5rem;
     margin-bottom: 1rem;
     font-weight: 700;
+    line-height: 1.2;
 }
 
 .hero-content p {
@@ -203,6 +208,11 @@ nav {
     box-shadow: 0 8px 20px rgba(225, 29, 72, 0.3);
 }
 
+.cta-button.active {
+    background: var(--accent-color);
+    color: white;
+}
+
 /* === SECTIONS === */
 section {
     padding: 5rem 5%;
@@ -229,11 +239,6 @@ section {
 .menu-filters .cta-button {
     padding: 0.6rem 1.5rem;
     font-size: 0.95rem;
-}
-
-.menu-filters .cta-button.active {
-    background: var(--accent-color);
-    color: white;
 }
 
 .menu-grid {
@@ -310,26 +315,28 @@ section {
 
 .package-card.featured {
     border: 3px solid var(--primary-color);
-    transform: scale(1.05);
+    transform: scale(1.02);
+    position: relative;
+    padding-top: 3.5rem;
 }
 
 .package-card.featured:hover {
-    transform: scale(1.05) translateY(-8px);
+    transform: scale(1.02) translateY(-8px);
 }
 
-.package-card.featured::before {
-    content: "POPULAR";
+.popular-badge {
     position: absolute;
-    top: -14px;
+    top: 15px;
     left: 50%;
     transform: translateX(-50%);
     background: var(--primary-color);
     color: var(--secondary-color);
     padding: 6px 20px;
     border-radius: 20px;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: bold;
     letter-spacing: 1px;
+    text-transform: uppercase;
 }
 
 .package-card h3 {
@@ -338,11 +345,17 @@ section {
     color: var(--secondary-color);
 }
 
-.package-card > p {
+.package-price {
     font-size: 1.8rem;
     color: var(--accent-color);
     font-weight: bold;
     margin-bottom: 1.5rem;
+}
+
+.package-price span {
+    font-size: 1rem;
+    color: #64748b;
+    font-weight: normal;
 }
 
 .package-features {
@@ -457,8 +470,9 @@ select:invalid {
 .cart-sidebar {
     position: fixed;
     top: 0;
-    right: -400px;
+    right: -100%;
     width: 400px;
+    max-width: 100%;
     height: 100vh;
     max-height: 100vh;
     background: white;
@@ -467,14 +481,17 @@ select:invalid {
     z-index: var(--z-sidebar);
     display: flex;
     flex-direction: column;
+    visibility: hidden;
 }
 
 .cart-sidebar.open {
     right: 0;
+    visibility: visible;
 }
 
 .cart-sidebar[aria-hidden="false"] {
     right: 0;
+    visibility: visible;
 }
 
 /* Cart Header with Close Button */
@@ -485,6 +502,7 @@ select:invalid {
     padding: 1.5rem;
     border-bottom: 2px solid #f1f5f9;
     background: white;
+    flex-shrink: 0;
 }
 
 .cart-header h3 {
@@ -506,6 +524,7 @@ select:invalid {
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: 1;
 }
 
 .cart-close-btn:hover,
@@ -568,6 +587,7 @@ select:invalid {
     align-items: center;
     justify-content: center;
     line-height: 1;
+    user-select: none;
 }
 
 .qty-btn:hover {
@@ -583,6 +603,9 @@ select:invalid {
 .qty-btn:disabled {
     opacity: 0.4;
     cursor: not-allowed;
+    background: #f1f5f9;
+    border-color: #e2e8f0;
+    color: #94a3b8;
 }
 
 .quantity-display {
@@ -621,6 +644,7 @@ select:invalid {
     padding: 1.5rem;
     border-top: 2px solid #f1f5f9;
     background: white;
+    flex-shrink: 0;
 }
 
 .cart-total-row {
@@ -628,17 +652,18 @@ select:invalid {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     padding: 0.5rem 0;
 }
 
-.cart-total-row strong {
-    color: var(--secondary-color);
+.cart-total-row span:first-child {
+    color: #64748b;
 }
 
-#cartTotal {
+.total-amount {
     color: var(--accent-color);
     font-size: 1.5rem;
+    font-weight: bold;
 }
 
 .checkout-btn {
@@ -649,11 +674,6 @@ select:invalid {
     align-items: center;
     justify-content: center;
     gap: 0.5rem;
-}
-
-.checkout-btn::before {
-    content: "💬";
-    font-size: 1.2rem;
 }
 
 /* Empty Cart */
@@ -696,6 +716,10 @@ footer {
     color: white;
     text-align: center;
     padding: 2.5rem;
+}
+
+footer p {
+    opacity: 0.8;
 }
 
 /* === RESPONSIVE === */
@@ -791,4 +815,14 @@ footer {
 
 .cart-items-container::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
+}
+
+/* Animation for menu items */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.menu-item {
+    animation: fadeIn 0.3s ease;
 }
