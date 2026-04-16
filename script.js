@@ -1,6 +1,5 @@
 /**
  * Double Take Catering - Shopping Cart Application
- * Fixed cart functionality with proper state management
  */
 
 (function() {
@@ -15,41 +14,26 @@
 
     // === STATE ===
     let cart = [];
-    let isCartOpen = false;
 
     // === INITIALIZATION ===
     document.addEventListener('DOMContentLoaded', function() {
         loadCartFromStorage();
         updateCartUI();
-        initEventListeners();
         
-        // Set minimum date to today for event date
+        // Set minimum date to today
         const dateInput = document.getElementById('eventDate');
         if (dateInput) {
             const today = new Date().toISOString().split('T')[0];
             dateInput.setAttribute('min', today);
         }
-    });
-
-    // === EVENT LISTENERS ===
-    function initEventListeners() {
-        // Keyboard support for Escape key
+        
+        // Keyboard support
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && isCartOpen) {
+            if (e.key === 'Escape') {
                 closeCart();
             }
         });
-        
-        // Close cart when clicking overlay
-        const overlay = document.getElementById('cartOverlay');
-        if (overlay) {
-            overlay.addEventListener('click', function(e) {
-                if (e.target === overlay) {
-                    closeCart();
-                }
-            });
-        }
-    }
+    });
 
     // === SANITIZATION ===
     function sanitize(str) {
@@ -78,21 +62,14 @@
                 }
             }
         } catch (e) {
-            console.warn('Could not load cart:', e);
             cart = [];
         }
     }
 
     // === VALIDATION ===
     function validateItem(name, price) {
-        if (typeof name !== 'string' || name.trim().length === 0) {
-            console.error('Invalid item name');
-            return false;
-        }
-        if (typeof price !== 'number' || price <= 0 || !isFinite(price)) {
-            console.error('Invalid item price');
-            return false;
-        }
+        if (typeof name !== 'string' || name.trim().length === 0) return false;
+        if (typeof price !== 'number' || price <= 0 || !isFinite(price)) return false;
         return true;
     }
 
@@ -101,11 +78,10 @@
         if (!validateItem(name, price)) return;
         
         const existing = cart.find(item => item.name === name);
-
         if (existing) {
             existing.quantity += 1;
         } else {
-            cart.push({ name: name.trim(), price: price, quantity: 1, id: Date.now() });
+            cart.push({ name: name.trim(), price: price, quantity: 1 });
         }
 
         saveCartToStorage();
@@ -119,10 +95,7 @@
         const cartCount = document.getElementById('cartCount');
         const cartTotal = document.getElementById('cartTotal');
 
-        if (!cartItems || !cartCount || !cartTotal) {
-            console.error('Cart elements not found');
-            return;
-        }
+        if (!cartItems || !cartCount || !cartTotal) return;
 
         let totalItems = 0;
         let totalPrice = 0;
@@ -148,9 +121,9 @@
                     <div class="cart-item-name">${sanitize(item.name)}</div>
                     <div class="cart-item-row">
                         <div class="quantity-controls">
-                            <button type="button" class="qty-btn" onclick="changeQty(${index}, -1)" aria-label="Decrease quantity" ${item.quantity <= 1 ? 'disabled' : ''}>−</button>
+                            <button type="button" class="qty-btn" onclick="changeQty(${index}, -1)" ${item.quantity <= 1 ? 'disabled' : ''}>−</button>
                             <span class="quantity-display">${item.quantity}</span>
-                            <button type="button" class="qty-btn" onclick="changeQty(${index}, 1)" aria-label="Increase quantity">+</button>
+                            <button type="button" class="qty-btn" onclick="changeQty(${index}, 1)">+</button>
                         </div>
                         <span class="cart-item-price">${CONFIG.CURRENCY}${(item.price * item.quantity).toLocaleString()}</span>
                     </div>
@@ -162,12 +135,6 @@
 
         cartCount.textContent = totalItems;
         cartTotal.textContent = totalPrice.toLocaleString();
-        
-        // Update cart button visibility
-        const cartBtn = document.querySelector('.cart-btn');
-        if (cartBtn) {
-            cartBtn.style.transform = totalItems > 0 ? 'scale(1.05)' : 'scale(1)';
-        }
     };
 
     // === CHANGE QUANTITY ===
@@ -175,12 +142,9 @@
         if (index < 0 || index >= cart.length) return;
         
         const newQuantity = cart[index].quantity + delta;
-        
-        // Prevent going below 1 (use remove button instead)
         if (newQuantity < 1) return;
         
         cart[index].quantity = newQuantity;
-
         saveCartToStorage();
         updateCartUI();
     };
@@ -199,7 +163,8 @@
 
     // === TOGGLE CART ===
     window.toggleCart = function() {
-        if (isCartOpen) {
+        const sidebar = document.getElementById('cartSidebar');
+        if (sidebar.classList.contains('open')) {
             closeCart();
         } else {
             openCart();
@@ -214,12 +179,9 @@
 
         if (!sidebar || !overlay) return;
 
-        isCartOpen = true;
-
         sidebar.classList.add('open');
         overlay.classList.add('active');
-        sidebar.setAttribute('aria-hidden', 'false');
-        body.style.overflow = 'hidden'; // Prevent background scroll
+        body.style.overflow = 'hidden';
     };
 
     // === CLOSE CART ===
@@ -230,12 +192,9 @@
 
         if (!sidebar || !overlay) return;
 
-        isCartOpen = false;
-
         sidebar.classList.remove('open');
         overlay.classList.remove('active');
-        sidebar.setAttribute('aria-hidden', 'true');
-        body.style.overflow = ''; // Restore scroll
+        body.style.overflow = '';
     };
 
     // === TOGGLE MOBILE MENU ===
@@ -251,19 +210,12 @@
         const items = document.querySelectorAll('.menu-item');
         const buttons = document.querySelectorAll('.menu-filters .cta-button');
         
-        // Update active button
         buttons.forEach(btn => btn.classList.remove('active'));
-        if (btnElement) {
-            btnElement.classList.add('active');
-        }
+        if (btnElement) btnElement.classList.add('active');
 
         items.forEach(item => {
             const itemCategory = item.getAttribute('data-category');
-            if (category === 'all' || itemCategory === category) {
-                item.style.display = 'flex';
-            } else {
-                item.style.display = 'none';
-            }
+            item.style.display = (category === 'all' || itemCategory === category) ? 'flex' : 'none';
         });
     };
 
@@ -272,11 +224,10 @@
         if (!validateItem(name, price)) return;
         
         const existing = cart.find(item => item.name === name);
-
         if (existing) {
             existing.quantity += 1;
         } else {
-            cart.push({ name: name.trim(), price: price, quantity: 1, type: 'package', id: Date.now() });
+            cart.push({ name: name.trim(), price: price, quantity: 1, type: 'package' });
         }
 
         saveCartToStorage();
@@ -305,11 +256,8 @@
         message += "\nName:\nPhone:\nAddress:";
 
         const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/${CONFIG.PHONE_NUMBER}?text=${encodedMessage}`;
+        window.open(`https://wa.me/${CONFIG.PHONE_NUMBER}?text=${encodedMessage}`, "_blank");
 
-        window.open(whatsappUrl, "_blank");
-
-        // Clear cart after checkout
         cart = [];
         saveCartToStorage();
         updateCartUI();
@@ -321,22 +269,11 @@
     window.handleBooking = function(e) {
         e.preventDefault();
 
-        const nameInput = document.getElementById('fullName');
-        const emailInput = document.getElementById('email');
-        const eventTypeInput = document.getElementById('eventType');
-        const dateInput = document.getElementById('eventDate');
-        const guestsInput = document.getElementById('guests');
-
-        if (!nameInput || !emailInput || !eventTypeInput || !dateInput || !guestsInput) {
-            showNotification('Form error. Please refresh.', 'error');
-            return;
-        }
-
-        const name = nameInput.value.trim();
-        const email = emailInput.value.trim();
-        const eventType = eventTypeInput.value;
-        const date = dateInput.value;
-        const guests = parseInt(guestsInput.value);
+        const name = document.getElementById('fullName').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const eventType = document.getElementById('eventType').value;
+        const date = document.getElementById('eventDate').value;
+        const guests = parseInt(document.getElementById('guests').value);
 
         if (!name || !email || !eventType || !date || !guests) {
             showNotification('Please fill in all fields', 'error');
@@ -365,9 +302,7 @@
         message += `Guests: ${guests}\n`;
 
         const encodedMessage = encodeURIComponent(message);
-        const whatsappUrl = `https://wa.me/${CONFIG.PHONE_NUMBER}?text=${encodedMessage}`;
-
-        window.open(whatsappUrl, "_blank");
+        window.open(`https://wa.me/${CONFIG.PHONE_NUMBER}?text=${encodedMessage}`, "_blank");
         
         e.target.reset();
         showNotification('Booking request sent!');
@@ -382,7 +317,6 @@
         n.className = 'notification';
         n.textContent = msg;
         n.setAttribute('role', 'alert');
-        n.setAttribute('aria-live', 'polite');
 
         const colors = {
             success: '#0f172a',
@@ -398,12 +332,11 @@
             color: #fff;
             padding: 14px 24px;
             border-radius: 10px;
-            z-index: 9999;
+            z-index: 10000;
             opacity: 0;
             transform: translateY(-10px);
             transition: all 0.3s ease;
             max-width: 320px;
-            word-wrap: break-word;
             box-shadow: 0 10px 25px rgba(0,0,0,0.2);
             font-weight: 500;
         `;
@@ -423,3 +356,4 @@
     }
 
 })();
+ 
