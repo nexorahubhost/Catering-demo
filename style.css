@@ -435,6 +435,7 @@ select:invalid {
     width: 400px;
     max-width: 100%;
     height: 100vh;
+    height: 100dvh;
     background: white;
     box-shadow: -5px 0 30px rgba(0,0,0,0.3);
     transition: right 0.35s ease;
@@ -489,6 +490,7 @@ select:invalid {
     flex: 1;
     overflow-y: auto;
     padding: 1rem 1.5rem;
+    min-height: 0; 
 }
 
 /* Cart Item Styling */
